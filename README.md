@@ -1,3 +1,5 @@
+### IF YOU SEE THIS MESSAGE I HAVE NOT YET UPLOADED THIS PROJECT (04-10-2026)
+
 # AssetStudio – Dragon Ball Legends / Unity 6 Edition
 
 A modified version of AssetStudio focused on restoring compatibility with modern Dragon Ball Legends assets built with Unity 6 (6000.x).
