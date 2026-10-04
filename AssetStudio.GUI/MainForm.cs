@@ -1582,6 +1582,13 @@ namespace AssetStudio.GUI
 
             if (animator != null)
             {
+                Logger.Info($"[DBL-FBX] Explicit export requested: Animator + {animationList.Count} selected AnimationClip(s)");
+                if (animationList.Count == 0)
+                {
+                    Logger.Warning("[DBL-FBX] No AnimationClip selected; aborting DBL animated FBX export.");
+                    StatusStripUpdate("DBL FBX: select an Animator and at least one AnimationClip");
+                    return;
+                }
                 var saveFolderDialog = new OpenFolderDialog();
                 saveFolderDialog.InitialFolder = saveDirectoryBackup;
                 if (saveFolderDialog.ShowDialog(this) == DialogResult.OK)

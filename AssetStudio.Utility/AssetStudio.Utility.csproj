@@ -8,6 +8,7 @@
     <Copyright>Copyright © Perfare 2018-2022</Copyright>
     <DebugType>embedded</DebugType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

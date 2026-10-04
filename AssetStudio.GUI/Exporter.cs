@@ -369,9 +369,37 @@ namespace AssetStudio.GUI
                 uvs = JsonConvert.DeserializeObject<Dictionary<string, (bool, int)>>(Properties.Settings.Default.uvs),
                 texs = JsonConvert.DeserializeObject<Dictionary<string, int>>(Properties.Settings.Default.texs),
             };
+            if (animationList != null && animationList.Count > 0)
+            {
+                // DBL Edition: an explicit Animator + AnimationClip export must always carry animations into FBX.
+                // This avoids a stale user setting silently producing a static FBX.
+                Properties.Settings.Default.exportAnimations = true;
+                Logger.Info($"[DBL-FBX] Animator: {item.Text} | selected AnimationClips: {animationList.Count}");
+                foreach (var clipItem in animationList)
+                {
+                    var clip = (AnimationClip)clipItem.Asset;
+                    Logger.Info($"[DBL-FBX]   + {clip.m_Name} | sampleRate={clip.m_SampleRate}");
+                }
+            }
+
             var convert = animationList != null
                 ? new ModelConverter(m_Animator, options, animationList.Select(x => (AnimationClip)x.Asset).ToArray())
                 : new ModelConverter(m_Animator, options);
+
+            if (animationList != null && animationList.Count > 0)
+            {
+                var trackCount = convert.AnimationList.Sum(a => a.TrackList?.Count ?? 0);
+                Logger.Info($"[DBL-FBX] Converted animations: {convert.AnimationList.Count} | tracks: {trackCount}");
+                if (convert.AnimationList.Count == 0 || trackCount == 0)
+                {
+                    Logger.Warning("[DBL-FBX] AnimationClip selected, but ModelConverter produced no animation tracks. The problem is clip-to-skeleton binding/path resolution, not the FBX writer.");
+                }
+                else
+                {
+                    foreach (var anim in convert.AnimationList)
+                        Logger.Info($"[DBL-FBX]   -> {anim.Name} | tracks={anim.TrackList?.Count ?? 0} | sampleRate={anim.SampleRate}");
+                }
+            }
             if (options.exportMaterials)
             {
                 var materialExportPath = Path.Combine(Path.GetDirectoryName(exportFullPath), "Materials");

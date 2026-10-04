@@ -1342,7 +1342,7 @@ namespace AssetStudio.GUI
             // 
             exportAnimatorwithselectedAnimationClipMenuItem.Name = "exportAnimatorwithselectedAnimationClipMenuItem";
             exportAnimatorwithselectedAnimationClipMenuItem.Size = new System.Drawing.Size(303, 22);
-            exportAnimatorwithselectedAnimationClipMenuItem.Text = "Export Animator + selected AnimationClips";
+            exportAnimatorwithselectedAnimationClipMenuItem.Text = "DBL Export Animator + selected AnimationClips (FBX)";
             exportAnimatorwithselectedAnimationClipMenuItem.Visible = false;
             exportAnimatorwithselectedAnimationClipMenuItem.Click += exportAnimatorwithAnimationClipMenuItem_Click;
             // 

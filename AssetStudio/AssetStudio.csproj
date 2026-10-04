@@ -7,6 +7,7 @@
     <FileVersion>1.36.00</FileVersion>
     <Copyright>Copyright © Razmoth 2022; Copyright © Perfare 2018-2022</Copyright>
     <DebugType>embedded</DebugType>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
