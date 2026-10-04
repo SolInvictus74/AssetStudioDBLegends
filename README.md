@@ -19,7 +19,8 @@ The Unity 6 changes were investigated using serialized TypeTree data, raw object
 # Current status (OCT-2026)
 Tested successfully with Dragon Ball Legends assets built with Unity 6000.3.14f1:
 0 object parsing failures, working Scene Hierarchy, working textures/materials, and successful merged FBX export.
-Scope
+
+# Scope
 This project should currently be considered a Dragon Ball Legends-focused AssetStudio fork, not a guarantee of complete Unity 6 compatibility across all Unity games. Additional Unity 6 titles and serialization variants may require further testing.
 Credits
 Based on AssetStudio and the existing work of its contributors, with additional parser research and compatibility work for modern Dragon Ball Legends assets.
