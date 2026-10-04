@@ -8,16 +8,16 @@ Recent Dragon Ball Legends updates introduced serialized asset layouts that are 
 This version extends the parser to correctly handle the Unity 6 serialization changes found in current Dragon Ball Legends assets, while preserving compatibility with legacy Unity asset layouts.
 
 # Key improvements
-Unity 6 / 6000.x parsing support for Dragon Ball Legends
-Updated Shader serialization handling
-Updated Renderer serialization handling
-Fixed SkinnedMeshRenderer parsing and Scene Hierarchy reconstruction
-Added proper Unity 6 Texture / Texture2D serialization support
-Correct handling of Unity 6 texture metadata, mipmap fields, platform blobs, inline texture data and streamed .resS resources
-Fixed texture metadata corruption that could cause invalid dimensions/formats and crashes during texture decoding
-Restored model, material and texture processing
-Restored merged FBX export for modern Dragon Ball Legends character assets
-Legacy parsing paths are kept separate wherever possible to avoid breaking older Unity assets
+1. Unity 6 / 6000.x parsing support for Dragon Ball Legends
+2. Updated Shader serialization handling
+3. Updated Renderer serialization handling
+4. Fixed SkinnedMeshRenderer parsing and Scene Hierarchy reconstruction
+5. Added proper Unity 6 Texture / Texture2D serialization support
+6. Correct handling of Unity 6 texture metadata, mipmap fields, platform blobs, inline texture data and streamed .resS resources
+7. Fixed texture metadata corruption that could cause invalid dimensions/formats and crashes during texture decoding
+8. Restored model, material and texture processing
+9. Restored merged FBX export for modern Dragon Ball Legends character assets
+10. Legacy parsing paths are kept separate wherever possible to avoid breaking older Unity assets
 
 The Unity 6 changes were investigated using serialized TypeTree data, raw object layouts and byte-level validation, rather than relying on format guesses. Texture2D parsing, for example, was validated against the complete serialized object boundary to ensure that the parser consumes the expected number of bytes.
 
