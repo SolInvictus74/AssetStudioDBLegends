@@ -63,6 +63,11 @@ namespace AssetStudio.GUI
             toolStripMenuItem19 = new System.Windows.Forms.ToolStripMenuItem();
             specifyAIVersion = new System.Windows.Forms.ToolStripComboBox();
             showExpOpt = new System.Windows.Forms.ToolStripMenuItem();
+            //ThemeManager - 04/1026
+            themeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            lightThemeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            darkThemeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            //ThemeManager - 04/1026
             modelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             exportAllObjectssplitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             exportSelectedObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -142,7 +147,11 @@ namespace AssetStudio.GUI
             columnHeader1 = new System.Windows.Forms.ColumnHeader();
             columnHeader2 = new System.Windows.Forms.ColumnHeader();
             progressbarPanel = new System.Windows.Forms.Panel();
-            progressBar1 = new System.Windows.Forms.ProgressBar();
+            //ThemeManager 04-10-26
+            //OldCode
+            //progressBar1 = new System.Windows.Forms.ProgressBar();
+            //NewCode
+            progressBar1 = new ThemedProgressBar();
             tabControl2 = new System.Windows.Forms.TabControl();
             tabPage4 = new System.Windows.Forms.TabPage();
             previewPanel = new System.Windows.Forms.Panel();
@@ -197,7 +206,21 @@ namespace AssetStudio.GUI
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, optionsToolStripMenuItem, modelToolStripMenuItem, exportToolStripMenuItem, filterTypeToolStripMenuItem, debugMenuItem, miscToolStripMenuItem });
+            //ThemeManager 04-10-26
+            //OldCode
+            //menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, optionsToolStripMenuItem, modelToolStripMenuItem, exportToolStripMenuItem, filterTypeToolStripMenuItem, debugMenuItem, miscToolStripMenuItem });
+            //NewCode
+            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                fileToolStripMenuItem,
+                optionsToolStripMenuItem,
+                modelToolStripMenuItem,
+                exportToolStripMenuItem,
+                filterTypeToolStripMenuItem,
+                debugMenuItem,
+                miscToolStripMenuItem,
+                themeToolStripMenuItem
+            });
             menuStrip1.Location = new System.Drawing.Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new System.Drawing.Size(1264, 24);
@@ -265,7 +288,32 @@ namespace AssetStudio.GUI
             // 
             // optionsToolStripMenuItem
             // 
-            optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { displayAll, toolStripSeparator10, enablePreview, enableModelPreview, modelsOnly, toolStripSeparator11, displayInfo, enableResolveDependencies, allowDuplicates, skipContainer, toolStripSeparator12, toolStripMenuItem14, specifyUnityCNKey, toolStripSeparator13, toolStripMenuItem18, toolStripMenuItem19, showExpOpt });
+
+            //ThemeManager 04-10-26
+            //OldCode
+            //optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { displayAll, toolStripSeparator10, enablePreview, enableModelPreview, modelsOnly, toolStripSeparator11, displayInfo, enableResolveDependencies, allowDuplicates, skipContainer, toolStripSeparator12, toolStripMenuItem14, specifyUnityCNKey, toolStripSeparator13, toolStripMenuItem18, toolStripMenuItem19, showExpOpt });
+            //NewCode
+            optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                displayAll,
+                toolStripSeparator10,
+                enablePreview,
+                enableModelPreview,
+                modelsOnly,
+                toolStripSeparator11,
+                displayInfo,
+                enableResolveDependencies,
+                allowDuplicates,
+                skipContainer,
+                toolStripSeparator12,
+                toolStripMenuItem14,
+                specifyUnityCNKey,
+                toolStripSeparator13,
+                toolStripMenuItem18,
+                toolStripMenuItem19,
+                showExpOpt,
+                //themeToolStripMenuItem //Moved to standalone Theme drop menu
+            });
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             optionsToolStripMenuItem.Text = "Options";
@@ -420,6 +468,37 @@ namespace AssetStudio.GUI
             showExpOpt.Size = new System.Drawing.Size(225, 22);
             showExpOpt.Text = "Export options";
             showExpOpt.Click += showExpOpt_Click;
+
+            //
+            // ThemeManager 04-10-26
+            //
+            // themeToolStripMenuItem
+            //
+            themeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                lightThemeToolStripMenuItem,
+                darkThemeToolStripMenuItem
+            });
+            themeToolStripMenuItem.Name = "themeToolStripMenuItem";
+            themeToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            themeToolStripMenuItem.Text = "Theme";
+            //
+            // lightThemeToolStripMenuItem
+            //
+            lightThemeToolStripMenuItem.Checked = true;
+            lightThemeToolStripMenuItem.Name = "lightThemeToolStripMenuItem";
+            lightThemeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            lightThemeToolStripMenuItem.Text = "Light";
+            lightThemeToolStripMenuItem.Click += lightThemeToolStripMenuItem_Click;
+            //
+            // darkThemeToolStripMenuItem
+            //
+            darkThemeToolStripMenuItem.Name = "darkThemeToolStripMenuItem";
+            darkThemeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            darkThemeToolStripMenuItem.Text = "Dark";
+            darkThemeToolStripMenuItem.Click += darkThemeToolStripMenuItem_Click;
+            //
+           
             // 
             // modelToolStripMenuItem
             // 
@@ -1429,7 +1508,12 @@ namespace AssetStudio.GUI
         private System.Windows.Forms.ToolStripMenuItem exportAllAssetsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportSelectedAssetsMenuItem;
         private System.Windows.Forms.Panel previewPanel;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        //ThemeManager 04-10-26
+        //OldCode
+        //private System.Windows.Forms.ProgressBar progressBar1;
+        //NewCode
+        private ThemedProgressBar progressBar1;
+        //ThemeManager 04-10-26
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Panel progressbarPanel;
@@ -1553,6 +1637,11 @@ namespace AssetStudio.GUI
         private System.Windows.Forms.ToolStripMenuItem assetMapTypeMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadCABMapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem allowDuplicates;
+        //ThemeManager 04-10-26
+        private System.Windows.Forms.ToolStripMenuItem themeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lightThemeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem darkThemeToolStripMenuItem;
+        //ThemeManager 04-10-26
     }
 }
 

@@ -27,6 +27,10 @@ namespace AssetStudio.GUI
             _parent = form;
             _filters = new Dictionary<string, Regex>();
             _assetEntries = new List<AssetEntry>();
+
+            //ThemeManager 04-10-26
+            ThemeManager.Apply(this, ThemeManager.CurrentTheme);
+            //ThemeManager 04-10-26
         }
 
         private async void loadAssetMap_Click(object sender, EventArgs e)

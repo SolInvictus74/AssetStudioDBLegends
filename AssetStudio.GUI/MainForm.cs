@@ -91,7 +91,33 @@ namespace AssetStudio.GUI
             InitializeLogger();
             InitalizeOptions();
             FMODinit();
+
+            //ThemeManager 04-10-26
+            InitializeTheme();
+            //ThemeManager 04-10-26
         }
+
+        //ThemeManager 04-10-26
+        private void InitializeTheme()
+        {
+            bool darkMode = Properties.Settings.Default.darkMode;
+
+            if (darkMode)
+            {
+                ThemeManager.Apply(this, AppTheme.Dark);
+
+                lightThemeToolStripMenuItem.Checked = false;
+                darkThemeToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                ThemeManager.Apply(this, AppTheme.Light);
+
+                lightThemeToolStripMenuItem.Checked = true;
+                darkThemeToolStripMenuItem.Checked = false;
+            }
+        }
+        //ThemeManager 04-10-26
 
         private void InitializeExportOptions()
         {
@@ -556,6 +582,61 @@ namespace AssetStudio.GUI
                 InitalizeOptions();
             }
         }
+
+        //ThemeManager 04-10-26
+        private void lightThemeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ThemeManager.CurrentTheme == AppTheme.Light)
+                return;
+
+            if (!ConfirmThemeChange())
+                return;
+
+            ThemeManager.ApplyToOpenForms(AppTheme.Light);
+
+            lightThemeToolStripMenuItem.Checked = true;
+            darkThemeToolStripMenuItem.Checked = false;
+
+            Properties.Settings.Default.darkMode = false;
+            Properties.Settings.Default.Save();
+        }
+
+        private void darkThemeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ThemeManager.CurrentTheme == AppTheme.Dark)
+                return;
+
+            if (!ConfirmThemeChange())
+                return;
+
+            ThemeManager.ApplyToOpenForms(AppTheme.Dark);
+
+            lightThemeToolStripMenuItem.Checked = false;
+            darkThemeToolStripMenuItem.Checked = true;
+
+            Properties.Settings.Default.darkMode = true;
+            Properties.Settings.Default.Save();
+        }
+
+        private bool ConfirmThemeChange()
+        {
+            if (assetListView.Items.Count == 0)
+                return true;
+
+            DialogResult result = MessageBox.Show(
+                this,
+                "Changing the theme may take a few seconds when assets are already loaded.\n\n" +
+                "The application may temporarily appear unresponsive.\n\n" +
+                "Do you want to continue?",
+                "Change Theme",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button1);
+
+            return result == DialogResult.Yes;
+        }
+
+        //ThemeManager 04-10-26
 
         private void assetListView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
@@ -1157,6 +1238,9 @@ namespace AssetStudio.GUI
 
         private void PreviewMesh(Mesh m_Mesh)
         {
+            //LazyLoading
+            m_Mesh.ProcessData();
+            //LazyLoading
             if (m_Mesh.m_VertexCount > 0)
             {
                 viewMatrixData = Matrix4.CreateRotationY(-(float)Math.PI / 4) * Matrix4.CreateRotationX(-(float)Math.PI / 6);

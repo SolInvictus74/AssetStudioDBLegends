@@ -491,10 +491,19 @@ namespace AssetStudio
             path = reader.ReadAlignedString();
             classID = (ClassIDType)reader.ReadInt32();
             script = new PPtr<MonoScript>(reader);
-            if (version[0] == 2022 && version[1] >= 2) //2022.2 and up
+
+            //AnimationFix - 4/10/2026
+            //if (version[0] == 2022 && version[1] >= 2) //2022.2 and up
+            // {
+            //    flags = reader.ReadInt32();
+            // }
+            // End old code
+            // Start new code
+            if (version[0] > 2022 || (version[0] == 2022 && version[1] >= 2)) //2022.2 and up
             {
                 flags = reader.ReadInt32();
-        }
+            }
+
         }
 
         public YAMLNode ExportYAML(int[] version)
@@ -591,7 +600,15 @@ namespace AssetStudio
             path = reader.ReadAlignedString();
             classID = reader.ReadInt32();
             script = new PPtr<MonoScript>(reader);
-            if (version[0] == 2022 && version[1] >= 2) //2022.2 and up
+
+            //AnimationFix - 4/10/2026
+            //if (version[0] == 2022 && version[1] >= 2) //2022.2 and up
+            //{
+            //    flags = reader.ReadInt32();
+            //}
+            //End old code
+            //Start new code
+            if (version[0] > 2022 || (version[0] == 2022 && version[1] >= 2)) //2022.2 and up
             {
                 flags = reader.ReadInt32();
             }

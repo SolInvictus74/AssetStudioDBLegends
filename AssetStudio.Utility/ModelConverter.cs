@@ -271,7 +271,13 @@ namespace AssetStudio
             var mesh = GetMesh(meshR);
             if (mesh == null)
                 return;
+            //LazyLoading
+            mesh.ProcessData();
+            //LazyLoading
+
             var iMesh = new ImportedMesh();
+
+
             meshR.m_GameObject.TryGet(out var m_GameObject2);
             iMesh.Path = GetTransformPath(m_GameObject2.m_Transform);
             iMesh.SubmeshList = new List<ImportedSubmesh>();

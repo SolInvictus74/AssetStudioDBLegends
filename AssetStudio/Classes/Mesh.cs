@@ -477,6 +477,9 @@ namespace AssetStudio
 
     public sealed class Mesh : NamedObject
     {
+        //  Lazy Loading
+        private bool isloaded;
+        //
         private bool m_Use16BitIndices = true;
         public List<SubMesh> m_SubMeshes;
         private uint[] m_IndexBuffer;
@@ -770,11 +773,17 @@ namespace AssetStudio
                 m_StreamData = new StreamingInfo(reader);
             }
 
-            ProcessData();
+            // ProcessData();
         }
 
-        private void ProcessData()
+        //private void ProcessData()
+        public void ProcessData()
         {
+            // Lazyloading
+            if (isloaded)
+                return;
+            // Lazyloading
+
             if (!string.IsNullOrEmpty(m_StreamData?.path))
             {
                 if (m_VertexData.m_VertexCount > 0)
@@ -788,17 +797,33 @@ namespace AssetStudio
                 ReadVertexData();
             }
 
-            if (m_CollisionMeshBaked)
-            {
-                return;
-            }
 
-            if ((version[0] > 2 || (version[0] == 2 && version[1] >= 6))) //2.6.0 and later
+            //Removed for LazyLoading
+            //if (m_CollisionMeshBaked)
+            //{
+            //return;
+            //}
+
+            //if ((version[0] > 2 || (version[0] == 2 && version[1] >= 6))) //2.6.0 and later
+            //{
+            //DecompressCompressedMesh();
+            //}
+
+            //LazyLoading
+
+            if (!m_CollisionMeshBaked)
             {
-                DecompressCompressedMesh();
+                if (version[0] > 2 || (version[0] == 2 && version[1] >= 6))
+                {
+                    DecompressCompressedMesh();
+                }
+
+                GetTriangles();
             }
 
             GetTriangles();
+            isloaded = true;
+            //LazyLoading
         }
 
         private void ReadVertexData()

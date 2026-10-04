@@ -66,6 +66,10 @@ namespace AssetStudio.GUI
 
             typesComboBox.SelectedIndex = 0;
             uvsComboBox.SelectedIndex = 0;
+
+            //ThemeManager 04-10-26
+            ThemeManager.Apply(this, ThemeManager.CurrentTheme);
+            //ThemeManager 04-10-26
         }
 
         private void OKbutton_Click(object sender, EventArgs e)
