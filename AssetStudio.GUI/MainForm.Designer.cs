@@ -181,6 +181,9 @@ namespace AssetStudio.GUI
             copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             exportSelectedAssetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             exportAnimatorwithselectedAnimationClipMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            //Animator 05-10-26
+            previewAnimationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            //Animator 05-10-26
             goToSceneHierarchyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             showOriginalFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip1.SuspendLayout();
@@ -605,6 +608,17 @@ namespace AssetStudio.GUI
             exportAnimatorWithSelectedAnimationClipToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             exportAnimatorWithSelectedAnimationClipToolStripMenuItem.Text = "Animator + selected AnimationClips";
             exportAnimatorWithSelectedAnimationClipToolStripMenuItem.Click += exportAnimatorwithAnimationClipMenuItem_Click;
+
+            // Animator 05-10-26
+            // previewAnimationToolStripMenuItem
+            // 
+            previewAnimationToolStripMenuItem.Name = "previewAnimationToolStripMenuItem";
+            previewAnimationToolStripMenuItem.Size = new System.Drawing.Size(303, 22);
+            previewAnimationToolStripMenuItem.Text = "Preview Animation (Animator+AnimationClip)";
+            previewAnimationToolStripMenuItem.Visible = true;
+            previewAnimationToolStripMenuItem.Click += previewAnimationToolStripMenuItem_Click;
+
+
             // 
             // toolStripSeparator4
             // 
@@ -1399,7 +1413,19 @@ namespace AssetStudio.GUI
             // contextMenuStrip1
             // 
             contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { copyToolStripMenuItem, exportSelectedAssetsToolStripMenuItem, exportAnimatorwithselectedAnimationClipMenuItem, goToSceneHierarchyToolStripMenuItem, showOriginalFileToolStripMenuItem });
+            //Animator 05-10-26
+            //OldCode
+            //contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { copyToolStripMenuItem, exportSelectedAssetsToolStripMenuItem, exportAnimatorwithselectedAnimationClipMenuItem, goToSceneHierarchyToolStripMenuItem, showOriginalFileToolStripMenuItem });
+            //NewCode
+            contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                copyToolStripMenuItem,
+                exportSelectedAssetsToolStripMenuItem,
+                exportAnimatorwithselectedAnimationClipMenuItem,
+                previewAnimationToolStripMenuItem,
+                goToSceneHierarchyToolStripMenuItem,
+                showOriginalFileToolStripMenuItem
+            });
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new System.Drawing.Size(304, 114);
             // 
@@ -1642,6 +1668,10 @@ namespace AssetStudio.GUI
         private System.Windows.Forms.ToolStripMenuItem lightThemeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem darkThemeToolStripMenuItem;
         //ThemeManager 04-10-26
+        //Animator 05-10-26
+        private System.Windows.Forms.ToolStripMenuItem previewAnimationToolStripMenuItem;
+        //Animator 05-10-26
     }
+
 }
 

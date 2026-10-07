@@ -85,6 +85,27 @@ namespace AssetStudio.GUI
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             InitializeComponent();
+            //AnimationPreview
+            var previewSceneAnimationMenuItem = new ToolStripMenuItem(
+                "Preview Animation (Scene Hierarchy+AnimationClip)");
+
+            previewSceneAnimationMenuItem.Click +=
+                previewSceneAnimationToolStripMenuItem_Click;
+
+            previewSceneAnimationMenuItem.ToolTipText =
+                "Preview animations using the selected GameObject hierarchy, meshes, and AnimationClips.";
+
+            previewAnimationToolStripMenuItem.ToolTipText =
+                "Preview animations using the selected Animator and AnimationClips.";
+
+
+            var scenePreviewMenu = new ContextMenuStrip();
+            scenePreviewMenu.ShowItemToolTips = true;
+            scenePreviewMenu.Items.Add(previewSceneAnimationMenuItem);
+
+            sceneTreeView.ContextMenuStrip = scenePreviewMenu;
+            //AnimationPreview
+
             Text = $"Studio v{Application.ProductVersion}";
             InitializeExportOptions();
             InitializeProgressBar();
@@ -1406,6 +1427,7 @@ namespace AssetStudio.GUI
         }
         private void PreviewAnimator(Animator m_Animator)
         {
+
             var options = new ModelConverter.Options()
             {
                 imageFormat = Properties.Settings.Default.convertType,
@@ -1418,6 +1440,10 @@ namespace AssetStudio.GUI
             };
             var model = new ModelConverter(m_Animator, options, Array.Empty<AnimationClip>());
             PreviewModel(model);
+            //AnimationPreview - 05/10/26
+
+            //AnimatinoPreview - 05/10/26
+
         }
 
         private void PreviewAnimationClip(AnimationClip clip)
@@ -1649,6 +1675,7 @@ namespace AssetStudio.GUI
 
         private void exportAnimatorwithAnimationClipMenuItem_Click(object sender, EventArgs e)
         {
+
             AssetItem animator = null;
             List<AssetItem> animationList = new List<AssetItem>();
             var selectedAssets = GetSelectedAssets();
@@ -1682,6 +1709,122 @@ namespace AssetStudio.GUI
                     ExportAnimatorWithAnimationClip(animator, animationList, exportPath);
                 }
             }
+        }
+        //Animator 05-10-26
+        private void previewAnimationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AssetItem animatorItem = null;
+            List<AssetItem> animationList = new List<AssetItem>();
+
+            var selectedAssets = GetSelectedAssets();
+
+            foreach (var assetItem in selectedAssets)
+            {
+                if (assetItem.Type == ClassIDType.Animator)
+                {
+                    if (animatorItem != null)
+                    {
+                        MessageBox.Show(
+                            "Select exactly one Animator.",
+                            "Animation Preview",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        return;
+                    }
+
+                    animatorItem = assetItem;
+                }
+                else if (assetItem.Type == ClassIDType.AnimationClip)
+                {
+                    animationList.Add(assetItem);
+                }
+            }
+
+            if (animatorItem == null)
+            {
+                MessageBox.Show(
+                    "Select one Animator.",
+                    "Animation Preview",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            if (animationList.Count == 0)
+            {
+                MessageBox.Show(
+                    "Select at least one AnimationClip together with the Animator.",
+                    "Animation Preview",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            var animator = (Animator)animatorItem.Asset;
+
+            var animationClips = animationList
+                .Select(x => (AnimationClip)x.Asset)
+                .ToArray();
+
+            var options = new ModelConverter.Options()
+            {
+                imageFormat = Properties.Settings.Default.convertType,
+                game = Studio.Game,
+                collectAnimations = Properties.Settings.Default.collectAnimations,
+                exportMaterials = false,
+                materials = new HashSet<Material>(),
+                uvs = JsonConvert.DeserializeObject<Dictionary<string, (bool, int)>>(
+                    Properties.Settings.Default.uvs),
+                texs = JsonConvert.DeserializeObject<Dictionary<string, int>>(
+                    Properties.Settings.Default.texs),
+            };
+
+            var model = new ModelConverter(
+                animator,
+                options,
+                animationClips);
+
+            int meshCount =
+                model.MeshList?.Count ?? 0;
+
+            int vertexCount =
+                model.MeshList?
+                    .Where(mesh => mesh?.VertexList != null)
+                    .Sum(mesh => mesh.VertexList.Count)
+                ?? 0;
+
+            animator.m_GameObject.TryGet(
+                out var animatorGameObject);
+
+            string animatorGameObjectName =
+                animatorGameObject?.m_Name
+                ?? "<null>";
+
+            int childCount =
+                animatorGameObject?
+                    .m_Transform?
+                    .m_Children?
+                    .Count
+                ?? 0;
+
+            MessageBox.Show(
+                $"Animator: {animatorItem.Text}\n" +
+                $"GameObject: {animatorGameObjectName}\n" +
+                $"Direct children: {childCount}\n" +
+                $"Converted meshes: {meshCount}\n" +
+                $"Converted vertices: {vertexCount}",
+                "Animation Preview Diagnostic");
+
+            var animationPreview =
+                new AnimationPreviewForm(
+                    model.RootFrame,
+                    model.MeshList,
+                    model.AnimationList);
+
+            animationPreview.Show(this);
         }
 
         private void exportSelectedObjectsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2557,6 +2700,130 @@ namespace AssetStudio.GUI
             var unitycn = new UnityCNForm();
             unitycn.Show();
         }
+
+        //AnimationPreview 07-10-26
+        private void PreviewSelectedSceneObjectsDiagnostic()
+        {
+            var gameObjects = new List<GameObject>();
+
+            GetSelectedParentNode(
+                sceneTreeView.Nodes,
+                gameObjects);
+
+            if (gameObjects.Count == 0)
+            {
+                MessageBox.Show(
+                    "Select at least one GameObject in Scene Hierarchy.",
+                    "Animation Preview",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            var animationClips = GetSelectedAssets()
+                .Where(x => x.Type == ClassIDType.AnimationClip)
+                .Select(x => (AnimationClip)x.Asset)
+                .ToArray();
+
+            var options = new ModelConverter.Options()
+            {
+                imageFormat = Properties.Settings.Default.convertType,
+                game = Studio.Game,
+                collectAnimations = false,
+                exportMaterials = false,
+                materials = new HashSet<Material>(),
+                uvs = JsonConvert.DeserializeObject<
+                    Dictionary<string, (bool, int)>>(
+                        Properties.Settings.Default.uvs),
+                texs = JsonConvert.DeserializeObject<
+                    Dictionary<string, int>>(
+                        Properties.Settings.Default.texs)
+            };
+
+            try
+            {
+
+                StatusStripUpdate("Building animation previewer...");
+
+                // Consente alla barra di stato di mostrare il messaggio
+                // prima della conversione sincrona.
+                toolStripStatusLabel1.Owner?.Refresh();
+
+                System.Diagnostics.Debug.WriteLine(
+                    "[Animation Preview] Building animation previewer...");
+
+                var model = new ModelConverter(
+                    gameObjects[0].m_Name,
+                    gameObjects,
+                    options,
+                    animationClips);
+                //AnimPreviewer-Diagnostic 07-10-26
+
+                //int meshCount = model.MeshList?.Count ?? 0;
+
+                //int vertexCount = model.MeshList?
+                //    .Where(mesh => mesh?.VertexList != null)
+                //    .Sum(mesh => mesh.VertexList.Count) ?? 0;
+
+                //MessageBox.Show(
+                //    $"Selected GameObjects: {gameObjects.Count}\n" +
+                //    $"Converted meshes: {meshCount}\n" +
+                //    $"Converted vertices: {vertexCount}\n" +
+                //    $"Root frame: {model.RootFrame?.Name ?? "<null>"}",
+                //    "Scene Hierarchy Diagnostic",
+                //    MessageBoxButtons.OK,
+                //    MessageBoxIcon.Information);
+
+                //AnimationPreview 07-10-26
+                if (model.RootFrame == null)
+                {
+                    MessageBox.Show(
+                        "No valid skeleton hierarchy was found.",
+                        "Animation Preview",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var animationPreview = new AnimationPreviewForm(
+                    model.RootFrame,
+                    model.MeshList,
+                    model.AnimationList);
+
+                animationPreview.Show(this);
+                //AnimationPreview 07-10-26
+
+                StatusStripUpdate("Animation preview ready.");
+
+                System.Diagnostics.Debug.WriteLine(
+                    "[Animation Preview] Animation preview ready.");
+            }
+
+
+
+            catch (Exception ex)
+            {
+                StatusStripUpdate("Animation preview failed.");
+
+                System.Diagnostics.Debug.WriteLine(
+                    "[Animation Preview] ERROR: " + ex);
+
+                MessageBox.Show(
+                    ex.ToString(),
+                    "Animation Preview Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private void previewSceneAnimationToolStripMenuItem_Click(
+    object sender,
+    EventArgs e)
+        {
+            PreviewSelectedSceneObjectsDiagnostic();
+        }
+
+        //AnimationPreview 07-10-26
 
         #region FMOD
         private void FMODinit()

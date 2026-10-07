@@ -8,19 +8,52 @@ namespace AssetStudio.GUI
 {
     internal class ThemedProgressBar : ProgressBar
     {
-        public bool DarkMode { get; set; }
+        private bool darkMode;
+
+        public bool DarkMode
+        {
+            get => darkMode;
+
+            set
+            {
+                if (darkMode == value)
+                    return;
+
+                darkMode = value;
+
+                SetStyle(
+                    ControlStyles.UserPaint,
+                    darkMode);
+
+                SetStyle(
+                    ControlStyles.AllPaintingInWmPaint |
+                    ControlStyles.OptimizedDoubleBuffer,
+                    darkMode);
+
+                UpdateStyles();
+                Invalidate();
+            }
+        }
 
         public ThemedProgressBar()
         {
+            /*
+             * Light Mode starts with the native Windows renderer.
+             * This preserves the original green ProgressBar.
+             */
             SetStyle(
                 ControlStyles.UserPaint |
                 ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.OptimizedDoubleBuffer,
-                true);
+                false);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            /*
+             * In Light Mode UserPaint is disabled, so Windows
+             * renders the native ProgressBar automatically.
+             */
             if (!DarkMode)
             {
                 base.OnPaint(e);
@@ -30,7 +63,8 @@ namespace AssetStudio.GUI
             Rectangle bounds = ClientRectangle;
 
             using (SolidBrush backgroundBrush =
-                   new SolidBrush(DrawingColor.FromArgb(51, 51, 55)))
+                   new SolidBrush(
+                       DrawingColor.FromArgb(51, 51, 55)))
             {
                 e.Graphics.FillRectangle(
                     backgroundBrush,
@@ -51,14 +85,16 @@ namespace AssetStudio.GUI
             if (fillWidth <= 0)
                 return;
 
-            Rectangle fillBounds = new Rectangle(
-                0,
-                0,
-                fillWidth,
-                bounds.Height);
+            Rectangle fillBounds =
+                new Rectangle(
+                    0,
+                    0,
+                    fillWidth,
+                    bounds.Height);
 
             using (SolidBrush progressBrush =
-                   new SolidBrush(DrawingColor.FromArgb(0, 122, 204)))
+                   new SolidBrush(
+                       DrawingColor.FromArgb(0, 122, 204)))
             {
                 e.Graphics.FillRectangle(
                     progressBrush,
