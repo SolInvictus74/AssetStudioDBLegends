@@ -335,7 +335,7 @@ before loading the assets.
 
 ---
 
-# 10. Light and Dark Themes
+# 7. Light and Dark Themes
 
 AssetStudio – Dragon Ball Legends Edition includes both Light and Dark GUI themes.
 
